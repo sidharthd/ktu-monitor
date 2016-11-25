@@ -1,20 +1,24 @@
 from bs4 import BeautifulSoup as bs
 import requests
+from time import sleep
 
 def send_mail(notifications):
 	for i in notifications:
-		print i
+		print(i)
 
 last_notification = ""
 
-r=requests.get("https://ktu.edu.in/eu/core/announcements.htm")
-html=r.text
-soup=bs(html,"html.parser")
-tab=soup.table
-rows = soup.find(class_="ktu-news").find_all("tr")
+while(1):
+	url = "https://ktu.edu.in/eu/core/announcements.htm"
+	r=requests.get(url)
+	
+	html=r.text
+	soup=bs(html,"html.parser")
 
-notifications = []
-if __name__ == "__main__":
+	rows = soup.find(class_="ktu-news").find_all("tr")
+
+	notifications = []
+
 	for row in rows:
 		notification = row.find_all("td")[1].find("b").text
 		if notification != last_notification:
@@ -23,7 +27,9 @@ if __name__ == "__main__":
 			break
 
 	if notifications:
+		last_notification = notifications[0]
 		send_mail(notifications)
+	else:
+		print("No new notifications!")
 
-	for i in notifications:
-		print(i)
+		sleep(5)
