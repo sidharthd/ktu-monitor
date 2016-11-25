@@ -2,16 +2,10 @@ from bs4 import BeautifulSoup as bs
 import requests
 from time import sleep
 
-def send_mail(notifications):
-	for i in notifications:
-		print(i)
-
-last_notification = ""
-
-while(1):
+def search(last_notification):
 	url = "https://ktu.edu.in/eu/core/announcements.htm"
 	r=requests.get(url)
-	
+
 	html=r.text
 	soup=bs(html,"html.parser")
 
@@ -26,10 +20,4 @@ while(1):
 		else:
 			break
 
-	if notifications:
-		last_notification = notifications[0]
-		send_mail(notifications)
-	else:
-		print("No new notifications!")
-
-		sleep(5)
+	return notifications
